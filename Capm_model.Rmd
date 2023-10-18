@@ -1,0 +1,156 @@
+---
+title: "CAPM model"
+output: github_document
+author: "Yash Jaiswal"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Importing data
+
+data contains riskfree rate and market rate:
+
+```{r}
+df <- read.csv("D:\\Portfolio Projects data\\CAPM model\\capm_data.csv")
+```
+
+##Creating new column of risk premium
+
+```{r}
+df$risk_premium <- df$mkt - df$riskfree
+```
+ 
+##Creating Regression Equation For all companies
+
+```{r}
+dis.fit <- lm(dis ~ riskfree + risk_premium, data = df)
+ge.fit <- lm(ge ~ riskfree + risk_premium, data = df)
+gm.fit <- lm(gm ~ riskfree + risk_premium, data = df)
+ibm.fit <- lm(ibm ~ riskfree + risk_premium, data = df)
+msft.fit <- lm(msft ~ riskfree + risk_premium, data = df)
+xom.fit <- lm(xom ~ riskfree + risk_premium, data = df)
+
+```
+
+##Importing library
+
+```{r}
+library(ggplot2)
+```
+
+##Plotting a regression line for all companies
+
+```{r}
+ggplot(data = df, aes(y = dis*100, x = risk_premium*100)) + geom_point(col = 'red') +
+  xlab('Risk Premium(in %)') +
+  ylab('Expected return(in %)') +
+  ggtitle('Disney stock Returns') + geom_abline(method = 'lm')
+
+ggplot(data = df, aes(y = ge*100, x = risk_premium*100)) + geom_point(col = 'red') +
+  xlab('Risk Premium(in %)') +
+  ylab('Expected return(in %)') +
+  ggtitle('Disney stock Returns') + geom_abline(method = 'lm')
+
+ggplot(data = df, aes(y = gm*100, x = risk_premium*100)) + geom_point(col = 'red') +
+  xlab('Risk Premium(in %)') +
+  ylab('Expected return(in %)') +
+  ggtitle('Disney stock Returns') + geom_abline(method = 'lm')
+
+ggplot(data = df, aes(y = ibm*100, x = risk_premium*100)) + geom_point(col = 'red') +
+  xlab('Risk Premium(in %)') +
+  ylab('Expected return(in %)') +
+  ggtitle('Disney stock Returns') + geom_abline(method = 'lm')
+
+ggplot(data = df, aes(y = msft*100, x = risk_premium*100)) + geom_point(col = "red") +
+  xlab('Risk Premium') +
+  ylab('Expected Return') +
+  ggtitle('Microsoft stock Return') + geom_abline(method = 'lm')
+
+ggplot(data = df, aes(y = xom*100, x = risk_premium*100)) + geom_point(col = 'red') +
+  xlab('Risk Premium(in %)') +
+  ylab('Expected return(in %)') +
+  ggtitle('Disney stock Returns') + geom_abline(method = 'lm')
+```
+
+##Predicting returns
+
+```{r}
+dis.predict <- predict.lm(dis.fit)
+ge.predict <- predict.lm(ge.fit)
+gm.predict <- predict.lm(gm.fit)
+ibm.predict <- predict.lm(ibm.fit)
+msft.predict <- predict.lm(msft.fit)
+xom.predict <- predict.lm(xom.fit)
+```
+
+##Storing predicted values in the dataframe
+
+```{r}
+df$dis.predict <- dis.predict
+df$ge.predict <- ge.predict
+df$gm.predict <- gm.predict
+df$ibm.predict <- ibm.predict
+df$msft.predict <- msft.predict
+df$xom.predict <- xom.predict
+```
+
+##Plotting predicted values with actual returns for all companies
+
+```{r}
+ggplot(df, aes(y = dis.predict*100, x = risk_premium*100)) +
+  geom_smooth(method = 'lm', col = "green") +
+  geom_line(aes(y = dis*100, x = risk_premium*100), col = "red") +
+  geom_point(aes(y = dis*100, x = risk_premium*100), col = "darkred") +
+  ggtitle("Disney") +
+  xlab("Risk Premium(in %)") +
+  ylab("Expected Return(in %)")
+
+
+ggplot(df, aes(y = ge.predict*100, x = risk_premium*100)) +
+  geom_smooth(method = 'lm', col = "green") +
+  geom_line(aes(y = ge*100, x = risk_premium*100), col = "red") +
+  geom_point(aes(y = ge*100, x = risk_premium*100), col = "darkred") +
+  ggtitle("General Electric") +
+  xlab("Risk Premium(in %)") +
+  ylab("Expected Return(in %)")
+
+ggplot(df, aes(y = gm.predict*100, x = risk_premium*100)) +
+  geom_smooth(method = 'lm', col = "green") +
+  geom_line(aes(y = gm*100, x = risk_premium*100), col = "red") +
+  geom_point(aes(y = gm*100, x = risk_premium*100), col = "darkred") +
+  ggtitle("General Motors") +
+  xlab("Risk Premium(in %)") +
+  ylab("Expected Return(in %)")
+
+
+ggplot(df, aes(y = ibm.predict*100, x = risk_premium*100)) +
+  geom_smooth(method = 'lm', col = "green") +
+  geom_line(aes(y = ibm*100, x = risk_premium*100), col = "red") +
+  geom_point(aes(y = ibm*100, x = risk_premium*100), col = "darkred") +
+  ggtitle("IBM") +
+  xlab("Risk Premium(in %)") +
+  ylab("Expected Return(in %)")
+
+ggplot(df, aes(y = msft.predict*100, x = risk_premium*100)) +
+  geom_smooth(method = 'lm', col = "green") +
+  geom_line(aes(y = msft*100, x = risk_premium*100), col = "red") +
+  geom_point(aes(y = msft*100, x = risk_premium*100), col = "darkred") +
+  ggtitle("Microsoft") +
+  xlab("Risk Premium(in %)") +
+  ylab("Expected Return(in %)")
+
+
+ggplot(df, aes(y = xom.predict*100, x = risk_premium*100)) +
+  geom_smooth(method = 'lm', col = "green") +
+  geom_line(aes(y = xom*100, x = risk_premium*100), col = "red") +
+  geom_point(aes(y = xom*100, x = risk_premium*100), col = "darkred") +
+  ggtitle("Exxon Mobil") +
+  xlab("Risk Premium(in %)") +
+  ylab("Expected Return(in %)")
+```
+```{r}
+View(df)
+```
+
